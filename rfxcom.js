@@ -50,8 +50,8 @@ rfxtrx.on("th1", function (evt) {
       }
    }
    
-   client.publish('/gw1/'+evt.id+'/temperature', evt.temperature.toString(), {retain:true});
-   client.publish('/gw1/'+evt.id+'/humidity', evt.humidity.toString(), {retain:true}); 
+   client.publish('/gw1/rf/'+evt.id+'/temperature', evt.temperature.toString(), {retain:true});
+   client.publish('/gw1/rf/'+evt.id+'/humidity', evt.humidity.toString(), {retain:true}); 
 });
 
 /*
