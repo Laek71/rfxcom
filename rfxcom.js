@@ -16,64 +16,46 @@ var MODBUS_PORT = 1502;
 var devicelist=[];
 var input_register = [];
 var i=0;
+var handlers = {};
 var nbr_of_sensors=0;
 var topic;
-
-/*
-** Function to print the list of sensors
-*/
-function publish_sensorlist() {
-   // Dump sensorlist
-   for(i=0;i<nbr_of_sensors;i++) {
-      console.log("Sensor %d, ID %s", i, devicelist[i]);
-   }
-//   client.publish('/gw1/topics', devicelist.toString(), {retain:true});
-}
 
 /*
 ** Event: On Oregon Scientific temp and humidity sensor
 */
 rfxtrx.on("th1", function (evt) {
    // Oregon Scientific sensors 
-   console.log("Event %s, %s", evt.subtype, evt.id); 
-   console.log("Temp: %s, Hum:%s", evt.temperature, evt.humidity);
+   //console.log("Event %s, %s", evt.subtype, evt.id); 
+   //console.log("Temp: %s, Hum:%s", evt.temperature, evt.humidity);
 
    /*
     * Check which sensor and fill input registers with data
     */
    switch(evt.id) {
-   case 0xFB01: console.log("Temp 1 = %s", evt.temperature);
+   case "0xFB01": 
+   		input_register[0] = evt.temperature * 10;
+   		input_register[1] = evt.humidity * 10;
+   		console.log("Ute: temp = %s, hum = %s", input_register[0], input_register[1]);
    break;
-   case 0x6F02: console.log("Temp 2 = %s", evt.temperature);
+   case "0x6F02": 
+   		input_register[2] = evt.temperature * 10;
+		input_register[3] = evt.humidity * 10;
+		console.log("KŠllare: temp = %s, hum = %s", input_register[2], input_register[3]);
    break;
-   case 0x7004: console.log("Temp 3 = %s", evt.temperature);
+   case "0x7004": 
+   		input_register[4] = evt.temperature * 10;
+		input_register[5] = evt.humidity * 10;
+		console.log("Vind: temp = %s, hum = %s", input_register[4], input_register[5]);
    break;
-   case 0x3D01: console.log("Temp 4 = %s", evt.temperature);
+   case "0x3D01": 
+   		input_register[6] = evt.temperature * 10;
+		input_register[7] = evt.humidity * 10;
+		console.log("OkŠnd: temp = %s, hum = %s", input_register[6], input_register[7]);
    break;
    default:
 	   console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);
    }
-   // Loop through list to check if sensor is new or not 
-   for(i=0;i<=nbr_of_sensors;i++) {
-      if(devicelist[i]== evt.id) {
-	// This sensor is already known         
-	break;
-      }
-      else {
-         if(nbr_of_sensors<=i)
-         {
-	    // Aha, a new one!
-            console.log("New sensor found, %d, %d", i, nbr_of_sensors);
-            devicelist[nbr_of_sensors] = evt.id;
-            nbr_of_sensors++;
-	    publish_sensorlist();
-	    break;
-         }
-      }
-   }
    
- //  client.publish('/gw1/rf/'+evt.id+'/temperature', evt.temperature.toString(), {retain:true});
- //  client.publish('/gw1/rf/'+evt.id+'/humidity', evt.humidity.toString(), {retain:true}); 
 });
 
 /*
