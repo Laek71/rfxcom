@@ -1,0 +1,23 @@
+{
+  "name": "rfxcom",
+  "version": "0.0.1",
+  "description": "Reads sensors through rfxcom",
+  "main": "rfxcom.js",
+  "dependencies": {
+    "modbus-stack": "~0.2.1",
+    "rfxcom": "~0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Laek71/rfxcom"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Laek71/rfxcom/issues"
+  }
+}
