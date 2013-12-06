@@ -4,8 +4,6 @@
 
 var rfxcom = require('rfxcom');
 var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
-var mqtt = require('mqtt')
-  , client = mqtt.createClient();
 
 var devicelist=[];
 var i=0;
@@ -20,7 +18,7 @@ function publish_sensorlist() {
    for(i=0;i<nbr_of_sensors;i++) {
       console.log("Sensor %d, ID %s", i, devicelist[i]);
    }
-   client.publish('/gw1/topics', devicelist.toString(), {retain:true});
+//   client.publish('/gw1/topics', devicelist.toString(), {retain:true});
 }
 
 /*
@@ -50,8 +48,8 @@ rfxtrx.on("th1", function (evt) {
       }
    }
    
-   client.publish('/gw1/rf/'+evt.id+'/temperature', evt.temperature.toString(), {retain:true});
-   client.publish('/gw1/rf/'+evt.id+'/humidity', evt.humidity.toString(), {retain:true}); 
+ //  client.publish('/gw1/rf/'+evt.id+'/temperature', evt.temperature.toString(), {retain:true});
+ //  client.publish('/gw1/rf/'+evt.id+'/humidity', evt.humidity.toString(), {retain:true}); 
 });
 
 /*
