@@ -1,11 +1,20 @@
 /*
-** Read sensordata from a RFXCOM module and publish the data to an MQTT server
+** Read sensordata from a RFXCOM module and publish the data as a Modbus/TCP server
 */
-
+var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
-var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: true});
+var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
 
+/*
+ * Constants
+ */
+var MODBUS_PORT = 1502;
+
+/*
+ * Variables
+ */
 var devicelist=[];
+var input_register = [];
 var i=0;
 var nbr_of_sensors=0;
 var topic;
@@ -29,6 +38,21 @@ rfxtrx.on("th1", function (evt) {
    console.log("Event %s, %s", evt.subtype, evt.id); 
    console.log("Temp: %s, Hum:%s", evt.temperature, evt.humidity);
 
+   /*
+    * Check which sensor and fill input registers with data
+    */
+   switch(evt.id) {
+   case 0xFB01: console.log("Temp 1 = %s", evt.temperature);
+   break;
+   case 0x6F02: console.log("Temp 2 = %s", evt.temperature);
+   break;
+   case 0x7004: console.log("Temp 3 = %s", evt.temperature);
+   break;
+   case 0x3D01: console.log("Temp 4 = %s", evt.temperature);
+   break;
+   default:
+	   console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);
+   }
    // Loop through list to check if sensor is new or not 
    for(i=0;i<=nbr_of_sensors;i++) {
       if(devicelist[i]== evt.id) {
@@ -72,3 +96,23 @@ rfxtrx.on("status", function (evt) {
 rfxtrx.initialise(function () {
     console.log("Device initialised");
 });
+
+/*
+ * Handler for input registers
+ */ 
+handlers[FC.READ_INPUT_REGISTERS] = function(request, response) {
+	var start = request.startAddress;
+	var length = request.quantity;
+
+	var resp = new Array(length);
+	for (var i=0; i<length; i++) {
+		resp[i] = input_register[start+i];
+	}
+	
+	response.writeResponse(resp);
+}
+
+/*
+ * Start modbus server
+ */
+require('modbus-stack/server').createServer(handlers).listen(MODBUS_PORT);
