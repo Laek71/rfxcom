@@ -1,4 +1,4 @@
 rfxcom
 ======
 
-Talks to a Rfxcom module and publishes to MQTT broker
+Talks to a Rfxcom module and publishes sensor data
