@@ -44,7 +44,7 @@ rfxtrx.on("th1", function (evt) {
     * Check which sensor and fill input registers with data
     */
    switch(evt.id) {
-   case "0xFB01": 
+   case "0xB301": 
    		input_register[0] = evt.temperature * 10;
    		input_register[1] = evt.humidity * 10;
    		if(debugflag==1) {console.log("Ute: temp = %s, hum = %s", input_register[0], input_register[1]);}
