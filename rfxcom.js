@@ -3,7 +3,8 @@
 */
 var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
-var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
+//var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
+var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
 
 /*
  * Constants
@@ -35,25 +36,25 @@ rfxtrx.on("th1", function (evt) {
    case "0xFB01": 
    		input_register[0] = evt.temperature * 10;
    		input_register[1] = evt.humidity * 10;
-   		console.log("Ute: temp = %s, hum = %s", input_register[0], input_register[1]);
+   		//console.log("Ute: temp = %s, hum = %s", input_register[0], input_register[1]);
    break;
    case "0x6F02": 
    		input_register[2] = evt.temperature * 10;
 		input_register[3] = evt.humidity * 10;
-		console.log("Källare: temp = %s, hum = %s", input_register[2], input_register[3]);
+		//console.log("Kaellare: temp = %s, hum = %s", input_register[2], input_register[3]);
    break;
    case "0x7004": 
    		input_register[4] = evt.temperature * 10;
 		input_register[5] = evt.humidity * 10;
-		console.log("Vind: temp = %s, hum = %s", input_register[4], input_register[5]);
+		//console.log("Vind: temp = %s, hum = %s", input_register[4], input_register[5]);
    break;
-   case "0x3D01": 
+   case "0x1A04": 
    		input_register[6] = evt.temperature * 10;
 		input_register[7] = evt.humidity * 10;
-		console.log("Okänd: temp = %s, hum = %s", input_register[6], input_register[7]);
+		//console.log("Inne: temp = %s, hum = %s", input_register[6], input_register[7]);
    break;
    default:
-	   console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);
+	   //console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);
    }
    
 });
