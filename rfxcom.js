@@ -87,11 +87,12 @@ rfxtrx.on("lighting2", function (evt) {
         input_register[21] = 1;
         
         /*
-	** Hold value in this register for 5 minutes to give time for poller
+	** Hold value in this register for 1 minute to give time for a polling
+	** modbus master to detect the value
 	*/ 
         setTimeout(function () {
-           input_register[20] = 0; 
-        }, 300000);
+           input_register[21] = 0; 
+        }, 60000);
    } else {
         input_register[20] = 0;
    }  
