@@ -3,8 +3,8 @@
 */
 var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
-var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
-//var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
+//var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
+var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
 
 /*
  * Check for debug argument
