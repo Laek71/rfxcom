@@ -3,8 +3,8 @@
 */
 var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
-//var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
-var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
+var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
+//var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
 
 /*
  * Check for debug argument
@@ -68,6 +68,33 @@ rfxtrx.on("th1", function (evt) {
 	   if(debugflag==1) {console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);}
    }
    
+});
+
+/*
+** Event: On Magnetic sensor (Proove)
+*/
+rfxtrx.on("lighting2", function (evt) {
+   // Proove Magnetic switchs
+  
+   // Check arguments if debug
+   if(arg2 == 'debug') {
+        debugflag = 1;
+   }
+   if(debugflag) {console.log("Magnetic Switch: %s", evt.command);}
+
+   if(evt.command === 'On') {
+        input_register[20] = 1;
+        input_register[21] = 1;
+        
+        /*
+	** Hold value in this register for 5 minutes to give time for poller
+	*/ 
+        setTimeout(function () {
+           input_register[20] = 0; 
+        }, 300000);
+   } else {
+        input_register[20] = 0;
+   }  
 });
 
 /*
