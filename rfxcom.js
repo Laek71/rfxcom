@@ -54,7 +54,7 @@ rfxtrx.on("th1", function (evt) {
 		input_register[3] = evt.humidity * 10;
 		if(debugflag==1) {console.log("Kaellare: temp = %s, hum = %s", input_register[2], input_register[3]);}
    break;
-   case "0x7004": 
+   case "0x5004": 
    		input_register[4] = evt.temperature * 10;
 		input_register[5] = evt.humidity * 10;
 		if(debugflag==1) {console.log("Vind: temp = %s, hum = %s", input_register[4], input_register[5]);}
