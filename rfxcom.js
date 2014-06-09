@@ -48,8 +48,8 @@ rfxtrx.on("th1", function (evt) {
 	 * The payload format is json:
 	 * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
 	 */
-	client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"temperature", '{"time":"'+now+'","value":"'+evt.temperature+'"}');
-  client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"humidity", '{"time":"'+now+'","value":"'+evt.humidity+'"}');
+	client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"temperature", '{"time":"'+now+'","value":"'+evt.temperature+'"}');
+  client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"humidity", '{"time":"'+now+'","value":"'+evt.humidity+'"}');
   console.log(evt);
 
    // Check arguments if debug
@@ -103,7 +103,7 @@ rfxtrx.on("lighting2", function (evt) {
   * The payload format is json:
   * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
   */
-  client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"magneticswitch", '{"time":"'+now+'","value":"'+evt.command+'"}');
+  client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"magneticswitch", '{"time":"'+now+'","value":"'+evt.command+'"}');
 
    // Check arguments if debug
    if(arg2 == 'debug') {
