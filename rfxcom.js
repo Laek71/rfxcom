@@ -50,6 +50,9 @@ rfxtrx.on("th1", function (evt) {
 	 */
 	client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"temperature", '{"time":"'+now+'","value":"'+evt.temperature+'"}');
   client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"humidity", '{"time":"'+now+'","value":"'+evt.humidity+'"}');
+  client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"humidityStatus", '{"time":"'+now+'","value":"'+evt.humidityStatus+'"}');
+  client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"batteryLevel", '{"time":"'+now+'","value":"'+evt.batteryLevel+'"}');
+  client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"rssi", '{"time":"'+now+'","value":"'+evt.rssi+'"}');
   console.log(evt);
 
    // Check arguments if debug
@@ -104,7 +107,7 @@ rfxtrx.on("lighting2", function (evt) {
   * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
   */
   client.publish("/lsp/"+evt.id+"/"+"rfxcom"+"/"+"magneticswitch", '{"time":"'+now+'","value":"'+evt.command+'"}');
-
+  console.log(evt);
    // Check arguments if debug
    if(arg2 == 'debug') {
         debugflag = 1;
