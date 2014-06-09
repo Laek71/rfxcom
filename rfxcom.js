@@ -3,6 +3,9 @@
 */
 var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
+var moment = require('moment');
+var mqtt = require('mqtt'),
+client = mqtt.createClient(1883, 'mqtt.leapy.se');
 //var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
 var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
 
@@ -26,40 +29,54 @@ var handlers = {};
 var nbr_of_sensors=0;
 var topic;
 var debugflag=0;
+var now;
 
 /*
 ** Event: On Oregon Scientific temp and humidity sensor
 */
 rfxtrx.on("th1", function (evt) {
-   // Oregon Scientific sensors 
-   //console.log("Event %s, %s", evt.subtype, evt.id); 
+   // Oregon Scientific sensors
+   //console.log("Event %s, %s", evt.subtype, evt.id);
    //console.log("Temp: %s, Hum:%s", evt.temperature, evt.humidity);
-   
+   /*
+	 * Create timestamp in EPOCH
+	 */
+	now = moment().utc();
+
+	/*
+	 * Publish to mqtt server
+	 * The payload format is json:
+	 * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
+	 */
+	client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"temperature", '{"time":"'+now+'","value":"'+evt.temperature+'"}');
+  client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"humidity", '{"time":"'+now+'","value":"'+evt.humidity+'"}');
+  console.log(evt);
+
    // Check arguments if debug
    if(arg2 == 'debug') {
 	debugflag = 1;
    }
-  
+
    /*
     * Check which sensor and fill input registers with data
     */
    switch(evt.id) {
-   case "0xB301": 
+   case "0xB301":
    		input_register[0] = evt.temperature * 10;
    		input_register[1] = evt.humidity * 10;
    		if(debugflag==1) {console.log("Ute: temp = %s, hum = %s", input_register[0], input_register[1]);}
    break;
-   case "0x6F02": 
+ case "0x9402":
    		input_register[2] = evt.temperature * 10;
 		input_register[3] = evt.humidity * 10;
 		if(debugflag==1) {console.log("Kaellare: temp = %s, hum = %s", input_register[2], input_register[3]);}
    break;
-   case "0x5004": 
+   case "0x5004":
    		input_register[4] = evt.temperature * 10;
 		input_register[5] = evt.humidity * 10;
 		if(debugflag==1) {console.log("Vind: temp = %s, hum = %s", input_register[4], input_register[5]);}
    break;
-   case "0x1A04": 
+   case "0x1A04":
    		input_register[6] = evt.temperature * 10;
 		input_register[7] = evt.humidity * 10;
 		if(debugflag==1) {console.log("Inne: temp = %s, hum = %s", input_register[6], input_register[7]);}
@@ -67,7 +84,7 @@ rfxtrx.on("th1", function (evt) {
    default:
 	   if(debugflag==1) {console.log("Unknown sensor (%s) = %s", evt.id, evt.temperature);}
    }
-   
+
 });
 
 /*
@@ -75,7 +92,19 @@ rfxtrx.on("th1", function (evt) {
 */
 rfxtrx.on("lighting2", function (evt) {
    // Proove Magnetic switchs
-  
+
+  /*
+  * Create timestamp in EPOCH
+  */
+  now = moment().utc();
+
+  /*
+  * Publish to mqtt server
+  * The payload format is json:
+  * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
+  */
+  client.publish("/ls/"+evt.id+"/"+"rfxcom"+"/"+"magneticswitch", '{"time":"'+now+'","value":"'+evt.command+'"}');
+
    // Check arguments if debug
    if(arg2 == 'debug') {
         debugflag = 1;
@@ -85,17 +114,17 @@ rfxtrx.on("lighting2", function (evt) {
    if(evt.command === 'On') {
         input_register[20] = 1;
         input_register[21] = 1;
-        
+
         /*
 	** Hold value in this register for 1 minute to give time for a polling
 	** modbus master to detect the value
-	*/ 
+	*/
         setTimeout(function () {
-           input_register[21] = 0; 
+           input_register[21] = 0;
         }, 60000);
    } else {
         input_register[20] = 0;
-   }  
+   }
 });
 
 /*
@@ -121,7 +150,7 @@ rfxtrx.initialise(function () {
 
 /*
  * Handler for input registers
- */ 
+ */
 handlers[FC.READ_INPUT_REGISTERS] = function(request, response) {
 	var start = request.startAddress;
 	var length = request.quantity;
@@ -130,7 +159,7 @@ handlers[FC.READ_INPUT_REGISTERS] = function(request, response) {
 	for (var i=0; i<length; i++) {
 		resp[i] = input_register[start+i];
 	}
-	
+
 	response.writeResponse(resp);
 }
 
