@@ -5,7 +5,7 @@ var FC = require('modbus-stack').FUNCTION_CODES;
 var rfxcom = require('rfxcom');
 var moment = require('moment');
 var mqtt = require('mqtt'),
-client = mqtt.createClient(1883, 'mqtt.leapy.se');
+client = mqtt.createSecureClient(8883, 'mqtt.leapy.se');
 //var rfxtrx = new rfxcom.RfxCom("/dev/tty.usbserial-A1WJDDBA", {debug: false});
 var rfxtrx = new rfxcom.RfxCom("/dev/ttyUSB0", {debug: false});
 
@@ -48,11 +48,11 @@ rfxtrx.on("th1", function (evt) {
 	 * The payload format is json:
 	 * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
 	 */
-	client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"temperature", '{"time":"'+now+'","value":"'+evt.temperature+'"}');
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"humidity", '{"time":"'+now+'","value":"'+evt.humidity+'"}');
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"humidityStatus", '{"time":"'+now+'","value":"'+evt.humidityStatus+'"}');
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"batteryLevel", '{"time":"'+now+'","value":"'+evt.batteryLevel+'"}');
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"rssi", '{"time":"'+now+'","value":"'+evt.rssi+'"}');
+	 client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"temperature", '{"time":'+now+',"value":'+evt.temperature+'}');
+   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"humidity", '{"time":'+now+',"value":'+evt.humidity+'}');
+   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"humidityStatus", '{"time":'+now+',"value":'+evt.humidityStatus+'}');
+   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"batteryLevel", '{"time":'+now+',"value":'+evt.batteryLevel+'}');
+   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"rssi", '{"time":'+now+',"value":'+evt.rssi+'}');
   //console.log(evt);
 
    // Check arguments if debug
@@ -106,8 +106,8 @@ rfxtrx.on("lighting2", function (evt) {
   * The payload format is json:
   * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
   */
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"magneticswitch", '{"time":"'+now+'","value":"'+evt.command+'"}');
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/"+"seqnbr", '{"time":"'+now+'","value":"'+evt.seqnbr+'"}');
+  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"magneticswitch", '{"time":'+now+',"value":'+evt.command+'}');
+  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"seqnbr", '{"time":'+now+',"value":'+evt.seqnbr+'}');
   //console.log(evt);
    // Check arguments if debug
    if(arg2 == 'debug') {
