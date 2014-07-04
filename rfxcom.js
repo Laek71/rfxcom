@@ -39,16 +39,16 @@ rfxtrx.on("th1", function (evt) {
    //console.log("Event %s, %s", evt.subtype, evt.id);
    //console.log("Temp: %s, Hum:%s", evt.temperature, evt.humidity);
    /*
-	 * Create timestamp in EPOCH
-	 */
-	now = moment().utc();
+    * Create timestamp in EPOCH
+    */
+   now = moment().utc();
 
-	/*
-	 * Publish to mqtt server
-	 * The payload format is json:
-	 * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
-	 */
-	 client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"temperature", '{"time":'+now+',"value":'+evt.temperature+'}');
+   /*
+    * Publish to mqtt server
+    * The payload format is json:
+    * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
+    */
+   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"temperature", '{"time":'+now+',"value":'+evt.temperature+'}');
    client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"humidity", '{"time":'+now+',"value":'+evt.humidity+'}');
    client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"humidityStatus", '{"time":'+now+',"value":'+evt.humidityStatus+'}');
    client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"batteryLevel", '{"time":'+now+',"value":'+evt.batteryLevel+'}');
