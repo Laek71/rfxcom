@@ -106,7 +106,7 @@ rfxtrx.on("lighting2", function (evt) {
   * The payload format is json:
   * {id="1234ABCD", "date":"2013-04-22T00:35:43","value":"42"}
   */
-  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"magneticswitch", '{"time":'+now+',"value":'+evt.command+'}');
+  client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"magneticswitch", '{"time":'+now+',"value":"'+evt.command+'"}');
   client.publish("/lsp/"+"rfxcom"+"/"+evt.id+"/metric/"+"seqnbr", '{"time":'+now+',"value":'+evt.seqnbr+'}');
   //console.log(evt);
    // Check arguments if debug
